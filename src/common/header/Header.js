@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './Header.css';
-import { Input, Button, InputAdornment } from '@material-ui/core';
+import { Input, Menu, Button, InputAdornment, MenuList, Link, MenuItem } from '@material-ui/core';
 import FastfoodIcon from '@material-ui/icons/Fastfood';
 import SearchIcon from '@material-ui/icons/Search';
 import AccountCircle from '@material-ui/icons/AccountCircle';
@@ -46,7 +46,7 @@ const styles = (theme => ({
         "text-decoration": "none",
         "color": "black",
         "text-decoration-underline": "none",
-        "padding-top": "0px",   
+        "padding-top": "0px",
         "padding-bottom": "0px",
     },
     menuList: { //Styling for the menulist component
@@ -85,8 +85,8 @@ class Header extends Component {
             modalIsOpen: false,
             menuIsOpen: false,
             value: 0,
-            usernameRequired: "dispNone",
-            username: "",
+            contactNoRequired: "dispNone",
+            contactno: "",
             passwordRequired: "dispNone",
             password: "",
             firstnameRequired: "dispNone",
@@ -105,8 +105,8 @@ class Header extends Component {
         this.setState({
             modalIsOpen: true,
             value: 0,
-            usernameRequired: "dispNone",
-            username: "",
+            contactNoRequired: "dispNone",
+            contactno: "",
             passwordRequired: "dispNone",
             password: "",
             firstnameRequired: "dispNone",
@@ -131,12 +131,16 @@ class Header extends Component {
     }
 
     loginClickHandler = () => {
-        this.state.username === "" ? this.setState({ usernameRequired: "dispBlock" }) : this.setState({ usernameRequired: "dispNone" });
-        this.state.password === "" ? this.setState({ passwordRequired: "dispBlock" }) : this.setState({ passwordRequired: "dispNone" });
+        if (this.state.contactno === "" || this.state.password === "") {
+            this.state.contactno === "" ? this.setState({ contactNoRequired: "dispBlock" }) : this.setState({ contactNoRequired: "dispNone" });
+            this.state.password === "" ? this.setState({ passwordRequired: "dispBlock" }) : this.setState({ passwordRequired: "dispNone" });
+        } else {
+            this.loginValidations();
+        }
     }
 
-    inputUsernameChangeHandler = (e) => {
-        this.setState({ username: e.target.value });
+    inputcontactnoChangeHandler = (e) => {
+        this.setState({ contactno: e.target.value });
     }
 
     inputpasswordChangeHandler = (e) => {
@@ -171,6 +175,65 @@ class Header extends Component {
         this.setState({ contact: e.target.value });
     }
 
+    //This method is called when the input in Search Box is changed.
+    //This in turn calls the function updateSearchRestaurant in the home page to update the searched restaurant list.
+    inputSearchChangeHandler = (e) => {
+        let searchOn = true
+        if (!(e.target.value === "")) {
+            let dataRestaurant = null;
+            let that = this
+            let xhrSearchRestaurant = new XMLHttpRequest();
+
+            xhrSearchRestaurant.addEventListener("readystatechange", function () {
+                if (xhrSearchRestaurant.readyState === 4 && xhrSearchRestaurant.status === 200) {
+                    var restaurant = JSON.parse(this.responseText).restaurants;
+                    that.props.updateSearchRestaurant(restaurant, searchOn);
+                }
+            })
+
+            xhrSearchRestaurant.open('GET', this.props.baseUrl + 'restaurant/name/' + e.target.value)
+            xhrSearchRestaurant.setRequestHeader("Content-Type", "application/json");
+            xhrSearchRestaurant.setRequestHeader("Cache-Control", "no-cache");
+            xhrSearchRestaurant.send(dataRestaurant);
+
+        } else {
+            let restaurant = [];
+            searchOn = false
+            this.props.updateSearchRestaurant(restaurant, searchOn);
+
+        }
+    }
+
+    //Validation of login points
+    //If all the parameters are right then returns true for the api call to be made if not displays the relevant error message.
+    loginValidations = () => {
+        let loginContactNoRequired = "dispNone";
+        let loginPasswordRequired = "dispNone";
+        let inValidLoginContact = "dispNone";
+        let isFormValid = true;
+        if (this.state.loginContactNo === "") { //check for contact not empty 
+            loginContactNoRequired = "dispBlock";
+            isFormValid = false;
+        }
+        if (this.state.loginPassword === "") { //Check for password not empty 
+            loginPasswordRequired = "dispBlock"
+            isFormValid = false;
+        }
+        if (this.state.loginContactNo !== "") { //Check for contact format
+            var contactNo = "[7-9][0-9]{9}";
+            if (!this.state.loginContactNo.match(contactNo)) {
+                inValidLoginContact = "dispBlock"
+                isFormValid = false;
+            }
+        }
+        this.setState({
+            loginContactNoRequired: loginContactNoRequired,
+            loginPasswordRequired: loginPasswordRequired,
+            inValidLoginContact: inValidLoginContact
+        })
+        return (isFormValid);
+    }
+
     render() {
         // Styles are stored in the const classes
         const { classes } = this.props;
@@ -185,15 +248,23 @@ class Header extends Component {
                                     <SearchIcon htmlColor="white" />
                                 </InputAdornment>
                             }
-                            fullWidth={true} placeholder="Search by Restaurant Name" />
+                            fullWidth={true} placeholder="Search by Restaurant Name" onChange={this.inputSearchChangeHandler} />
                     </span>
 
                     <div className="login-button">
                         <Button size="large" variant="contained" onClick={this.openModalHandler}>
-                            <AccountCircle className="login-button-icon" />
+                            <AccountCircle className="login-button-icon" onClick={this.profileButtonClickHandler} />
                             LOGIN
                         </Button>
                     </div>
+                    <Menu id="profile-menu" anchorEl={this.state.anchorEl} open={this.state.menuIsOpen} onClose={this.profileButtonClickHandler}>
+                        <MenuList className={classes.menuList}>
+                            <Link to={"/profile"} className={classes.menuItems} underline="none" color={"default"}>
+                                <MenuItem className={classes.menuItems} onClick={this.onMyProfileClicked} disableGutters={false}>My profile</MenuItem>
+                            </Link>
+                            <MenuItem className="menu-items" onClick={this.onLogOutClickHandler}>Logout</MenuItem>
+                        </MenuList>
+                    </Menu>
                 </header>
                 <Modal ariaHideApp={false} isOpen={this.state.modalIsOpen} contentLabel="Login"
                     onRequestClose={this.closeModalHandler} style={customStyles} >
@@ -204,10 +275,10 @@ class Header extends Component {
                     {this.state.value === 0 &&
                         <TabContainer>
                             <FormControl required>
-                                <InputLabel htmlFor="username">Username</InputLabel>
-                                <Input id="username" type="text" username={this.state.username}
-                                    onChange={this.inputUsernameChangeHandler} />
-                                <FormHelperText className={this.state.usernameRequired}>
+                                <InputLabel htmlFor="contactno">Contact No.</InputLabel>
+                                <Input id="contactno" type="text" contactno={this.state.contactno}
+                                    onChange={this.inputcontactnoChangeHandler} />
+                                <FormHelperText className={this.state.contactNoRequired}>
                                     <span className="red">required</span>
                                 </FormHelperText>
                             </FormControl>
