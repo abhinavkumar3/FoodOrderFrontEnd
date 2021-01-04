@@ -6,6 +6,7 @@ import {Route, Switch} from "react-router-dom";
 //Imports of different pages in the application
 import Home from './screens/home/Home';
 import Details from "./screens/details/Details";
+import Profile from './screens/profile/Profile';
 
 /**
  * This class represents the whole FoodOrdering Application.
