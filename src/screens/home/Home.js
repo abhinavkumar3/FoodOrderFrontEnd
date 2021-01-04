@@ -130,6 +130,32 @@ class Home extends Component {
         xhrRestaurants.send(restaurantsData);
     }
 
+    //This method is called from the header when the search box is activated and the page is needed to be updated with the new restaurant list.
+    updateSearchRestaurant = (searchRestaurant, searchOn) => {
+        let allRestaurantData = [];
+        if (searchOn) {
+            if (!this.state.isSearchOn) {
+                allRestaurantData = this.state.restaurant;
+                this.setState({
+                    restaurant: searchRestaurant,
+                    allRestaurantData: allRestaurantData,
+                    isSearchOn: true,
+                })
+            } else {
+                this.setState({
+                    ...this.state,
+                    restaurant: searchRestaurant,
+                })
+            }
+        } else {
+            allRestaurantData = this.state.allRestaurantData;
+            this.setState({
+                restaurant: allRestaurantData,
+                isSearchOn: false,
+            });
+        }
+    }
+
     //method updates the no columns according to the window size
     noOfColumns = () => {
 
