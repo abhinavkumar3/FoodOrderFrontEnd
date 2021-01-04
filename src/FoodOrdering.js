@@ -5,6 +5,7 @@ import {Route, Switch} from "react-router-dom";
 
 //Imports of different pages in the application
 import Home from './screens/home/Home';
+import Profile from './screens/profile/Profile';
 import Details from "./screens/details/Details";
 
 /**
