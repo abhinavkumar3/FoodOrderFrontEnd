@@ -20,6 +20,7 @@ class FoodOrdering extends Component {
         return (
             <Switch>
                 <Route exact path='/' render={(props) => <Home {...props} baseUrl={this.baseUrl}/>}/>
+                <Route exact path='/profile' render={(props) => <Profile {...props} />}/>
                 <Route exact path='/restaurant/:restaurantId'
                        render={(props) => <Details {...props} baseUrl={this.baseUrl}/>}/>
             </Switch>
