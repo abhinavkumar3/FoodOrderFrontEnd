@@ -94,6 +94,7 @@ class Header extends Component {
     constructor() {
         super();
         this.state = {
+            showHeaderSearchBox: true,
             isModalOpen: false,
             menuIsOpen: false,
             value: 0,
@@ -167,6 +168,7 @@ class Header extends Component {
             validPasswordHelpText: "dispNone",
             contactNoRegistered: "dispNone",
             contactHelpText: "dispNone",
+            showHeaderSearchBox: true,
         })
         //Changing badge visibility in the details page if login clicked in details page
         if(this.props.changeBadgeVisibility){
@@ -557,7 +559,7 @@ class Header extends Component {
             <div>
                 <header className="app-header">
                     <FastfoodIcon className="app-logo" fontSize="large" htmlColor="white" />
-                    {this.props.showHeaderSearchBox === true &&
+                    {this.state.showHeaderSearchBox === true &&
                         <span className="header-searchbox">
                             <Input className={classes.searchText}
                                 startAdornment={
