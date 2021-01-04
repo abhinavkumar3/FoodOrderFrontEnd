@@ -1,64 +1,57 @@
-/* Style for the header  */
-.app-header{
-    display: flex;
-    background-color:rgb(37, 50,56);
-    padding: 10px;
-    align-items: center;
-    justify-content: space-between;
-}
-
-/* Style for the log */
-.app-logo{
-    padding-left: 10px;
-    align-self: center;
-}
-
-.login-button {
-    float: right;
-} 
-
-/* Style for the searchbox */
-.header-searchbox{
-    display: flex;
-    align-items: left;
-    width: 300px;
-    align-self: flex-start;
-    height: 40px;
-}
-
-/* Style for the SerachIcon */
-#search-icon{
-    height: 27px;
-    padding: 0px 0px 0px 10px;
-}
-
-/* Style fro the login Button */
-.login-button-icon{
-    padding-right: 10px;
-}
-
-/* Style for the login modal  */
-.login-modal-tabs {
-    margin-bottom: 20px;
-}
-
-.white {
-    color: white;
-}
-
 .tabs {
-    margin-bottom: 20px;	
-    margin-bottom: 20px;
+	margin-bottom: 20px;
+}
+
+.MuiFormControl-root.login-and-signup-forms {
+	width: 80%;
 }
 
 .dispNone {
-    display: none;
+	display: none;
 }
 
 .dispBlock {
-    display: block;
+	display: block;
 }
 
 .red {
-    color: red;
+	color: red;
+}
+
+#login-error-msg-div {
+	display: flex;
+	font-size: smaller;
+}
+
+#login-error-msg {
+	width: 80%;
+	margin: auto;
+	text-align: left;
+}
+
+#customer-profile {
+	color: white;
+}
+
+#signup-error-msg-div {
+	display: flex;
+	font-size: smaller;
+}
+
+#signup-error-msg {
+	width: 80%;
+	margin: auto;
+	text-align: left;
+}
+
+
+/* For screen size upto 600px */
+
+@media screen and (max-width: 600px) {
+	#login-error-msg-div {
+		font-size: x-small;
+	}
+	#signup-error-msg-div {
+		font-size: x-small;
+    }
 }
