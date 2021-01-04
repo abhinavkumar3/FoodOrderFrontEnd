@@ -7,6 +7,7 @@ import {Route, Switch} from "react-router-dom";
 import Home from './screens/home/Home';
 import Details from "./screens/details/Details";
 import Profile from './screens/profile/Profile';
+import Checkout from "./screens/checkout/Checkout";
 
 /**
  * This class represents the whole FoodOrdering Application.
@@ -24,6 +25,7 @@ class FoodOrdering extends Component {
                 <Route exact path='/profile' render={(props) => <Profile {...props} />}/>
                 <Route exact path='/restaurant/:restaurantId'
                        render={(props) => <Details {...props} baseUrl={this.baseUrl}/>}/>
+                <Route exact path='/checkout' render={(props) => <Checkout {...props} baseUrl={this.baseUrl}/>}/>
             </Switch>
         )
     }
